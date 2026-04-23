@@ -1,0 +1,10 @@
+torch
+diffusers
+transformers
+accelerate
+scipy
+numpy
+matplotlib
+sentence-transformers
+huggingface_hub
+joblib
