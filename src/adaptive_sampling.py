@@ -52,12 +52,17 @@ def select_alpha_beta_from_grid(region, strength, alpha_beta_grid):
 
     if region == "balanced":
         candidates = sorted(candidates, key=lambda x: x["alpha"])
-        idx = min(len(candidates) - 1, int(strength * (len(candidates) - 1)))
-        selected = candidates[idx]
-        return selected["alpha"], selected["beta"]
+    elif region == "structure":
+        candidates = sorted(candidates, key=lambda x: x["alpha"], reverse=True)
+    elif region == "detail":
+        candidates = sorted(candidates, key=lambda x: x["beta"], reverse=True)
 
-    candidates = sorted(candidates, key=lambda x: abs(x["alpha"] - x["beta"]))
-    idx = min(len(candidates) - 1, int(strength * (len(candidates) - 1)))
+    strength_rescaled = (strength - 0.33) / (1.0 - 0.33)
+    strength_rescaled = float(strength_rescaled ** 2.0)
+    strength_rescaled = float(np.clip(strength_rescaled, 0.0, 1.0))
+
+    idx = int((1.0 - strength_rescaled) * (len(candidates) - 1))
+    idx = min(max(idx, 0), len(candidates) - 1)
     selected = candidates[idx]
     return selected["alpha"], selected["beta"]
 
